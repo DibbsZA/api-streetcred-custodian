@@ -1,0 +1,25 @@
+{
+  "name": "api-streetcred-custodian",
+  "version": "1.0.0",
+  "description": "Angular module interface to Streetcred.Id Custodian API",
+  "main": "index.js",
+  "keywords": [
+    "angular",
+    "typescript",
+    "streetcred"
+  ],
+  "author": {
+    "name": "Gary de Beer",
+    "url": "https://github.com/dibbsza"
+  },
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dibbsza/api-streetcred-custodian.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "deprecated": false,
+  "devDependencies": {}
+}

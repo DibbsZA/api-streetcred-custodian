@@ -1,0 +1,11 @@
+export * from './connection.service';
+import { ConnectionService } from './connection.service';
+export * from './credentials.service';
+import { CredentialsService } from './credentials.service';
+export * from './discovery.service';
+import { DiscoveryService } from './discovery.service';
+export * from './presentation.service';
+import { PresentationService } from './presentation.service';
+export * from './wallet.service';
+import { WalletService } from './wallet.service';
+export const APIS = [ConnectionService, CredentialsService, DiscoveryService, PresentationService, WalletService];
