@@ -118,7 +118,8 @@ export class ConnectionService {
     }
 
     if (undefined !== invitation) {
-      formParams = formParams.append('invitation', invitation as any) || formParams;
+      //formParams =
+      formParams.append('invitation', invitation as any);// || formParams;
     }
 
     return this.httpClient.post<ConnectionContract>(
