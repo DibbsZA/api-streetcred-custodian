@@ -1,11 +1,8 @@
 import { Inject, Injectable, Optional } from '@angular/core';
-import {
-  HttpClient, HttpHeaders, HttpParams,
-  HttpResponse, HttpEvent
-} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
 import { CustomHttpUrlEncodingCodec } from '../encoder';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { ConnectionContract } from '../model/connectionContract';
 import { ConnectionContractArray } from '../model/connectionContractArray';
@@ -13,15 +10,17 @@ import { ConnectionContractArray } from '../model/connectionContractArray';
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
 import { Configuration } from '../configuration';
 
-
 @Injectable()
 export class ConnectionService {
-
   protected basePath = 'https://api.streetcred.id/custodian/v1';
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
 
-  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+  constructor(
+    protected httpClient: HttpClient,
+    @Optional() @Inject(BASE_PATH) basePath: string,
+    @Optional() configuration: Configuration
+  ) {
     if (basePath) {
       this.basePath = basePath;
     }
@@ -45,7 +44,6 @@ export class ConnectionService {
     return false;
   }
 
-
   /**
    * Accepts the invitation.
    * Accepts the invitation.
@@ -54,11 +52,30 @@ export class ConnectionService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public acceptInvitation(walletId: string, invitation: string, observe?: 'body', reportProgress?: boolean): Observable<ConnectionContract>;
-  public acceptInvitation(walletId: string, invitation: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ConnectionContract>>;
-  public acceptInvitation(walletId: string, invitation: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ConnectionContract>>;
-  public acceptInvitation(walletId: string, invitation: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
+  public acceptInvitation(
+    walletId: string,
+    invitation: string,
+    observe?: 'body',
+    reportProgress?: boolean
+  ): Observable<ConnectionContract>;
+  public acceptInvitation(
+    walletId: string,
+    invitation: string,
+    observe?: 'response',
+    reportProgress?: boolean
+  ): Observable<HttpResponse<ConnectionContract>>;
+  public acceptInvitation(
+    walletId: string,
+    invitation: string,
+    observe?: 'events',
+    reportProgress?: boolean
+  ): Observable<HttpEvent<ConnectionContract>>;
+  public acceptInvitation(
+    walletId: string,
+    invitation: string,
+    observe: any = 'body',
+    reportProgress: boolean = false
+  ): Observable<any> {
     if (walletId === null || walletId === undefined) {
       throw new Error('Required parameter walletId was null or undefined when calling acceptInvitation.');
     }
@@ -80,24 +97,18 @@ export class ConnectionService {
     }
 
     // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
+    const httpHeaderAccepts: string[] = ['text/plain', 'application/json', 'text/json'];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     if (httpHeaderAcceptSelected !== undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
     // to determine the Content-Type header
-    const consumes: string[] = [
-      'multipart/form-data'
-    ];
+    const consumes: string[] = ['multipart/form-data'];
 
     const canConsumeForm = this.canConsumeForm(consumes);
 
-    let formParams: { append(param: string, value: any): void; };
+    let formParams: { append(param: string, value: any): void };
     const useForm = false;
     const convertFormParamsToString = false;
     if (useForm) {
@@ -110,13 +121,14 @@ export class ConnectionService {
       formParams = formParams.append('invitation', invitation as any) || formParams;
     }
 
-    return this.httpClient.post<ConnectionContract>(`${this.basePath}/api/${encodeURIComponent(String(walletId))}/connections/invitation`,
+    return this.httpClient.post<ConnectionContract>(
+      `${this.basePath}/api/${encodeURIComponent(String(walletId))}/connections/invitation`,
       convertFormParamsToString ? formParams.toString() : formParams,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
         observe,
-        reportProgress
+        reportProgress,
       }
     );
   }
@@ -129,11 +141,30 @@ export class ConnectionService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getConnection(walletId: string, connectionId: string, observe?: 'body', reportProgress?: boolean): Observable<ConnectionContract>;
-  public getConnection(walletId: string, connectionId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ConnectionContract>>;
-  public getConnection(walletId: string, connectionId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ConnectionContract>>;
-  public getConnection(walletId: string, connectionId: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
+  public getConnection(
+    walletId: string,
+    connectionId: string,
+    observe?: 'body',
+    reportProgress?: boolean
+  ): Observable<ConnectionContract>;
+  public getConnection(
+    walletId: string,
+    connectionId: string,
+    observe?: 'response',
+    reportProgress?: boolean
+  ): Observable<HttpResponse<ConnectionContract>>;
+  public getConnection(
+    walletId: string,
+    connectionId: string,
+    observe?: 'events',
+    reportProgress?: boolean
+  ): Observable<HttpEvent<ConnectionContract>>;
+  public getConnection(
+    walletId: string,
+    connectionId: string,
+    observe: any = 'body',
+    reportProgress: boolean = false
+  ): Observable<any> {
     if (walletId === null || walletId === undefined) {
       throw new Error('Required parameter walletId was null or undefined when calling getConnection.');
     }
@@ -155,26 +186,22 @@ export class ConnectionService {
     }
 
     // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
+    const httpHeaderAccepts: string[] = ['text/plain', 'application/json', 'text/json'];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     if (httpHeaderAcceptSelected !== undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
     // to determine the Content-Type header
-    const consumes: string[] = [
-    ];
+    const consumes: string[] = [];
 
-    return this.httpClient.get<ConnectionContract>(`${this.basePath}/api/${encodeURIComponent(String(walletId))}/connections/${encodeURIComponent(String(connectionId))}`,
+    return this.httpClient.get<ConnectionContract>(
+      `${this.basePath}/api/${encodeURIComponent(String(walletId))}/connections/${encodeURIComponent(String(connectionId))}`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
         observe,
-        reportProgress
+        reportProgress,
       }
     );
   }
@@ -187,10 +214,17 @@ export class ConnectionService {
    * @param reportProgress flag to report request and response progress.
    */
   public getConnections(walletId: string, observe?: 'body', reportProgress?: boolean): Observable<ConnectionContractArray>;
-  public getConnections(walletId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ConnectionContractArray>>;
-  public getConnections(walletId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ConnectionContractArray>>;
+  public getConnections(
+    walletId: string,
+    observe?: 'response',
+    reportProgress?: boolean
+  ): Observable<HttpResponse<ConnectionContractArray>>;
+  public getConnections(
+    walletId: string,
+    observe?: 'events',
+    reportProgress?: boolean
+  ): Observable<HttpEvent<ConnectionContractArray>>;
   public getConnections(walletId: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
     if (walletId === null || walletId === undefined) {
       throw new Error('Required parameter walletId was null or undefined when calling getConnections.');
     }
@@ -208,26 +242,22 @@ export class ConnectionService {
     }
 
     // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
+    const httpHeaderAccepts: string[] = ['text/plain', 'application/json', 'text/json'];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     if (httpHeaderAcceptSelected !== undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
     // to determine the Content-Type header
-    const consumes: string[] = [
-    ];
+    const consumes: string[] = [];
 
-    return this.httpClient.get<ConnectionContractArray>(`${this.basePath}/api/${encodeURIComponent(String(walletId))}/connections`,
+    return this.httpClient.get<ConnectionContractArray>(
+      `${this.basePath}/api/${encodeURIComponent(String(walletId))}/connections`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
         observe,
-        reportProgress
+        reportProgress,
       }
     );
   }
@@ -240,10 +270,17 @@ export class ConnectionService {
    * @param reportProgress flag to report request and response progress.
    */
   public getInvitations(walletId: string, observe?: 'body', reportProgress?: boolean): Observable<ConnectionContractArray>;
-  public getInvitations(walletId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ConnectionContractArray>>;
-  public getInvitations(walletId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ConnectionContractArray>>;
+  public getInvitations(
+    walletId: string,
+    observe?: 'response',
+    reportProgress?: boolean
+  ): Observable<HttpResponse<ConnectionContractArray>>;
+  public getInvitations(
+    walletId: string,
+    observe?: 'events',
+    reportProgress?: boolean
+  ): Observable<HttpEvent<ConnectionContractArray>>;
   public getInvitations(walletId: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
     if (walletId === null || walletId === undefined) {
       throw new Error('Required parameter walletId was null or undefined when calling getInvitations.');
     }
@@ -261,28 +298,23 @@ export class ConnectionService {
     }
 
     // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
+    const httpHeaderAccepts: string[] = ['text/plain', 'application/json', 'text/json'];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     if (httpHeaderAcceptSelected !== undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
     // to determine the Content-Type header
-    const consumes: string[] = [
-    ];
+    const consumes: string[] = [];
 
-    return this.httpClient.get<ConnectionContractArray>(`${this.basePath}/api/${encodeURIComponent(String(walletId))}/connections/invitations`,
+    return this.httpClient.get<ConnectionContractArray>(
+      `${this.basePath}/api/${encodeURIComponent(String(walletId))}/connections/invitations`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
         observe,
-        reportProgress
+        reportProgress,
       }
     );
   }
-
 }

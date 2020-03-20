@@ -1,26 +1,25 @@
 import { Inject, Injectable, Optional } from '@angular/core';
-import {
-  HttpClient, HttpHeaders, HttpParams,
-  HttpResponse, HttpEvent
-} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
 import { CustomHttpUrlEncodingCodec } from '../encoder';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { CredentialContractArray } from '../model/credentialContractArray';
 
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
 import { Configuration } from '../configuration';
 
-
 @Injectable()
 export class CredentialsService {
-
   protected basePath = 'https://api.streetcred.id/custodian/v1';
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
 
-  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+  constructor(
+    protected httpClient: HttpClient,
+    @Optional() @Inject(BASE_PATH) basePath: string,
+    @Optional() configuration: Configuration
+  ) {
     if (basePath) {
       this.basePath = basePath;
     }
@@ -44,7 +43,6 @@ export class CredentialsService {
     return false;
   }
 
-
   /**
    * Accepts the credential offer.
    * Accepts the credential offer.
@@ -53,11 +51,30 @@ export class CredentialsService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public acceptCredentialOffer(walletId: string, credentialId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-  public acceptCredentialOffer(walletId: string, credentialId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-  public acceptCredentialOffer(walletId: string, credentialId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-  public acceptCredentialOffer(walletId: string, credentialId: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
+  public acceptCredentialOffer(
+    walletId: string,
+    credentialId: string,
+    observe?: 'body',
+    reportProgress?: boolean
+  ): Observable<any>;
+  public acceptCredentialOffer(
+    walletId: string,
+    credentialId: string,
+    observe?: 'response',
+    reportProgress?: boolean
+  ): Observable<HttpResponse<any>>;
+  public acceptCredentialOffer(
+    walletId: string,
+    credentialId: string,
+    observe?: 'events',
+    reportProgress?: boolean
+  ): Observable<HttpEvent<any>>;
+  public acceptCredentialOffer(
+    walletId: string,
+    credentialId: string,
+    observe: any = 'body',
+    reportProgress: boolean = false
+  ): Observable<any> {
     if (walletId === null || walletId === undefined) {
       throw new Error('Required parameter walletId was null or undefined when calling acceptCredentialOffer.');
     }
@@ -79,24 +96,23 @@ export class CredentialsService {
     }
 
     // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-    ];
+    const httpHeaderAccepts: string[] = [];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     if (httpHeaderAcceptSelected !== undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
     // to determine the Content-Type header
-    const consumes: string[] = [
-    ];
+    const consumes: string[] = [];
 
-    return this.httpClient.post<any>(`${this.basePath}/api/${encodeURIComponent(String(walletId))}/credentials/${encodeURIComponent(String(credentialId))}`,
+    return this.httpClient.post<any>(
+      `${this.basePath}/api/${encodeURIComponent(String(walletId))}/credentials/${encodeURIComponent(String(credentialId))}`,
       null,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
         observe,
-        reportProgress
+        reportProgress,
       }
     );
   }
@@ -109,10 +125,17 @@ export class CredentialsService {
    * @param reportProgress flag to report request and response progress.
    */
   public listCredentials(walletId: string, observe?: 'body', reportProgress?: boolean): Observable<CredentialContractArray>;
-  public listCredentials(walletId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<CredentialContractArray>>;
-  public listCredentials(walletId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<CredentialContractArray>>;
+  public listCredentials(
+    walletId: string,
+    observe?: 'response',
+    reportProgress?: boolean
+  ): Observable<HttpResponse<CredentialContractArray>>;
+  public listCredentials(
+    walletId: string,
+    observe?: 'events',
+    reportProgress?: boolean
+  ): Observable<HttpEvent<CredentialContractArray>>;
   public listCredentials(walletId: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
     if (walletId === null || walletId === undefined) {
       throw new Error('Required parameter walletId was null or undefined when calling listCredentials.');
     }
@@ -130,26 +153,22 @@ export class CredentialsService {
     }
 
     // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
+    const httpHeaderAccepts: string[] = ['text/plain', 'application/json', 'text/json'];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     if (httpHeaderAcceptSelected !== undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
     // to determine the Content-Type header
-    const consumes: string[] = [
-    ];
+    const consumes: string[] = [];
 
-    return this.httpClient.get<CredentialContractArray>(`${this.basePath}/api/${encodeURIComponent(String(walletId))}/credentials`,
+    return this.httpClient.get<CredentialContractArray>(
+      `${this.basePath}/api/${encodeURIComponent(String(walletId))}/credentials`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
         observe,
-        reportProgress
+        reportProgress,
       }
     );
   }
@@ -162,11 +181,30 @@ export class CredentialsService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public listCredentialsForConnectionId(walletId: string, connectionId: string, observe?: 'body', reportProgress?: boolean): Observable<CredentialContractArray>;
-  public listCredentialsForConnectionId(walletId: string, connectionId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<CredentialContractArray>>;
-  public listCredentialsForConnectionId(walletId: string, connectionId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<CredentialContractArray>>;
-  public listCredentialsForConnectionId(walletId: string, connectionId: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
+  public listCredentialsForConnectionId(
+    walletId: string,
+    connectionId: string,
+    observe?: 'body',
+    reportProgress?: boolean
+  ): Observable<CredentialContractArray>;
+  public listCredentialsForConnectionId(
+    walletId: string,
+    connectionId: string,
+    observe?: 'response',
+    reportProgress?: boolean
+  ): Observable<HttpResponse<CredentialContractArray>>;
+  public listCredentialsForConnectionId(
+    walletId: string,
+    connectionId: string,
+    observe?: 'events',
+    reportProgress?: boolean
+  ): Observable<HttpEvent<CredentialContractArray>>;
+  public listCredentialsForConnectionId(
+    walletId: string,
+    connectionId: string,
+    observe: any = 'body',
+    reportProgress: boolean = false
+  ): Observable<any> {
     if (walletId === null || walletId === undefined) {
       throw new Error('Required parameter walletId was null or undefined when calling listCredentialsForConnectionId.');
     }
@@ -188,28 +226,25 @@ export class CredentialsService {
     }
 
     // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
+    const httpHeaderAccepts: string[] = ['text/plain', 'application/json', 'text/json'];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     if (httpHeaderAcceptSelected !== undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
     // to determine the Content-Type header
-    const consumes: string[] = [
-    ];
+    const consumes: string[] = [];
 
-    return this.httpClient.get<CredentialContractArray>(`${this.basePath}/api/${encodeURIComponent(String(walletId))}/credentials/connection/${encodeURIComponent(String(connectionId))}`,
+    return this.httpClient.get<CredentialContractArray>(
+      `${this.basePath}/api/${encodeURIComponent(String(walletId))}/credentials/connection/${encodeURIComponent(
+        String(connectionId)
+      )}`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
         observe,
-        reportProgress
+        reportProgress,
       }
     );
   }
-
 }

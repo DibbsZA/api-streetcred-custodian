@@ -1,26 +1,25 @@
 import { Inject, Injectable, Optional } from '@angular/core';
-import {
-  HttpClient, HttpHeaders, HttpParams,
-  HttpResponse, HttpEvent
-} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
 import { CustomHttpUrlEncodingCodec } from '../encoder';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { VerificationContractArray } from '../model/verificationContractArray';
 
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
 import { Configuration } from '../configuration';
 
-
 @Injectable()
 export class PresentationService {
-
   protected basePath = 'https://api.streetcred.id/custodian/v1';
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
 
-  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+  constructor(
+    protected httpClient: HttpClient,
+    @Optional() @Inject(BASE_PATH) basePath: string,
+    @Optional() configuration: Configuration
+  ) {
     if (basePath) {
       this.basePath = basePath;
     }
@@ -44,7 +43,6 @@ export class PresentationService {
     return false;
   }
 
-
   /**
    * Lists the verifications for connection.
    * Lists the verifications for connection.
@@ -53,11 +51,30 @@ export class PresentationService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public listVerificationsForConnection(walletId: string, connectionId: string, observe?: 'body', reportProgress?: boolean): Observable<VerificationContractArray>;
-  public listVerificationsForConnection(walletId: string, connectionId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<VerificationContractArray>>;
-  public listVerificationsForConnection(walletId: string, connectionId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<VerificationContractArray>>;
-  public listVerificationsForConnection(walletId: string, connectionId: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
+  public listVerificationsForConnection(
+    walletId: string,
+    connectionId: string,
+    observe?: 'body',
+    reportProgress?: boolean
+  ): Observable<VerificationContractArray>;
+  public listVerificationsForConnection(
+    walletId: string,
+    connectionId: string,
+    observe?: 'response',
+    reportProgress?: boolean
+  ): Observable<HttpResponse<VerificationContractArray>>;
+  public listVerificationsForConnection(
+    walletId: string,
+    connectionId: string,
+    observe?: 'events',
+    reportProgress?: boolean
+  ): Observable<HttpEvent<VerificationContractArray>>;
+  public listVerificationsForConnection(
+    walletId: string,
+    connectionId: string,
+    observe: any = 'body',
+    reportProgress: boolean = false
+  ): Observable<any> {
     if (walletId === null || walletId === undefined) {
       throw new Error('Required parameter walletId was null or undefined when calling listVerificationsForConnection.');
     }
@@ -79,28 +96,25 @@ export class PresentationService {
     }
 
     // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
+    const httpHeaderAccepts: string[] = ['text/plain', 'application/json', 'text/json'];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     if (httpHeaderAcceptSelected !== undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
     // to determine the Content-Type header
-    const consumes: string[] = [
-    ];
+    const consumes: string[] = [];
 
-    return this.httpClient.get<VerificationContractArray>(`${this.basePath}/api/${encodeURIComponent(String(walletId))}/presentations/connection/${encodeURIComponent(String(connectionId))}`,
+    return this.httpClient.get<VerificationContractArray>(
+      `${this.basePath}/api/${encodeURIComponent(String(walletId))}/presentations/connection/${encodeURIComponent(
+        String(connectionId)
+      )}`,
       {
         withCredentials: this.configuration.withCredentials,
         headers,
         observe,
-        reportProgress
+        reportProgress,
       }
     );
   }
-
 }

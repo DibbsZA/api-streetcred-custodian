@@ -1,26 +1,25 @@
 import { Inject, Injectable, Optional } from '@angular/core';
-import {
-  HttpClient, HttpHeaders, HttpParams,
-  HttpResponse, HttpEvent
-} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
 import { CustomHttpUrlEncodingCodec } from '../encoder';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { ProvisioningInfo } from '../model/provisioningInfo';
 
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
 import { Configuration } from '../configuration';
 
-
 @Injectable()
 export class DiscoveryService {
-
   protected basePath = 'https://api.streetcred.id/custodian/v1';
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
 
-  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+  constructor(
+    protected httpClient: HttpClient,
+    @Optional() @Inject(BASE_PATH) basePath: string,
+    @Optional() configuration: Configuration
+  ) {
     if (basePath) {
       this.basePath = basePath;
     }
@@ -44,7 +43,6 @@ export class DiscoveryService {
     return false;
   }
 
-
   /**
    * GetConfiguration
    *
@@ -55,7 +53,6 @@ export class DiscoveryService {
   public getConfiguration(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ProvisioningInfo>>;
   public getConfiguration(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ProvisioningInfo>>;
   public getConfiguration(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
     let headers = this.defaultHeaders;
 
     // authentication (accessToken) required
@@ -69,28 +66,21 @@ export class DiscoveryService {
     }
 
     // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
+    const httpHeaderAccepts: string[] = ['text/plain', 'application/json', 'text/json'];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     if (httpHeaderAcceptSelected !== undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
     // to determine the Content-Type header
-    const consumes: string[] = [
-    ];
+    const consumes: string[] = [];
 
-    return this.httpClient.get<ProvisioningInfo>(`${this.basePath}/api/config`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress
-      }
-    );
+    return this.httpClient.get<ProvisioningInfo>(`${this.basePath}/api/config`, {
+      withCredentials: this.configuration.withCredentials,
+      headers,
+      observe,
+      reportProgress,
+    });
   }
 
   /**
@@ -103,7 +93,6 @@ export class DiscoveryService {
   public getSuccess(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
   public getSuccess(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
   public getSuccess(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
     let headers = this.defaultHeaders;
 
     // authentication (accessToken) required
@@ -117,25 +106,20 @@ export class DiscoveryService {
     }
 
     // to determine the Accept header
-    const httpHeaderAccepts: string[] = [
-    ];
+    const httpHeaderAccepts: string[] = [];
     const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     if (httpHeaderAcceptSelected !== undefined) {
       headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
     // to determine the Content-Type header
-    const consumes: string[] = [
-    ];
+    const consumes: string[] = [];
 
-    return this.httpClient.get<any>(`${this.basePath}/`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers,
-        observe,
-        reportProgress
-      }
-    );
+    return this.httpClient.get<any>(`${this.basePath}/`, {
+      withCredentials: this.configuration.withCredentials,
+      headers,
+      observe,
+      reportProgress,
+    });
   }
-
 }
